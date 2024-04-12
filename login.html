@@ -1,3 +1,5 @@
+<!--*fontawesome icon shadow
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +10,11 @@
     <style>
         body{
             background: linear-gradient(158deg, rgba(255,255,255,1) 0%, rgba(0,164,197,1) 48%, rgba(0,116,140,1) 100%);
+        }
+        .shadowed-element {
+            filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.25));
+            /*-webkit-box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.75);
+            -moz-box-shadow: 6px 6px 2px 0px rgba(0,0,0,0.75);*/
         }
     </style>
 <!--    colors
@@ -20,15 +27,18 @@
         <div class="col d-flex justify-content-center align-items-center" style="height: 100vh">
             <form class="p-3" style="padding-top: 0;">
                 <div class="form-group">
-                    <div style="text-align: center;" class="p-2 mb-2"><i class="fa-regular fa-circle-user fa-5x" style="color:#ffffff;"></i></div>
-                    <label class="pb-3 h3">Login</label>
-                    <input type="email" class="form-control" placeholder="Enter email"><br>
-                    <input type="email" class="form-control" placeholder="Enter password">
-                    <button type="submit" class="btn btn-light mt-3">Login</button>
+                    <div style="text-align: center;" class="p-2 mb-2 "><i class="fa-regular fa-circle-user fa-5x shadowed-element" style="color:#ffffff;"></i></div>
+                    <label class="pb-3 h3 shadowed-element">Login</label>
+                    <input type="email" class="form-control shadowed-element" placeholder="Enter email"><br>
+                    <input type="email" class="form-control shadowed-element" placeholder="Enter password">
+                    <button type="submit" class="btn btn-light mt-3 shadowed-element">Login</button>
                     <div class="form-text mt-2"><a href="#" class="text-decoration-none " style="color: black">Need help?</a></div>
                 </div>
             </form>
-
+        </div>
+        <div class="col-lg-4">
+            <h2>Press some keys</h2>
+            <div id='result'></div>
         </div>
     </div>
 </div>
