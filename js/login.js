@@ -1,31 +1,58 @@
-$('#first').focus()
-$('input').focus(function(){
-    $(this).css('background-color', '#efefef')
-})
-$('input').blur(function(){
-    $(this).css('background-color', 'white')
-})
-$('.myclass').click(function() { $(this).slideUp() });
-$(document).keypress(function(event){
-    key= String.fromCharCode(event.which)
-    if(key >= 'a' && key <= 'z' ||
-        key >= 'A' && key <= 'Z' ||
-        key >= '0' && key <= '9')
-    {
-        $('#result').html("You pressed : " + key)
-        event.preventDefault();
+
+
+/*$('#loginSubmit').click((event)=>{
+    var Data = {
+        username: $('#username').val(),
+        password: $('#password').val(),
+    };
+    console.log(Data);
+
+    $.ajax({
+        url: 'http://localhost/project1/project1/forjquery/control/reqdata.php',
+        type: 'POST',
+        data:Data,
+        success: function(res){
+            alert(res);
+        }
+    })
+
+    event.preventDefault();
+});*/
+
+$('#loginSubmit').click((event)=>{
+    var hello = "hello";
+    // console.log(hello);
+    if($('#username').val()==""){
+        $('#usernameSpan').html("Require");
     }
-})
-canvas  = $('#pad')[0]
-context = canvas.getContext("2d")
-pendown = false
-$('#pad').mousemove(function(event)
-{
-    var xpos = event.pageX - canvas.offsetLeft
-    var ypos = event.pageY - canvas.offsetTop
-    if (pendown) context.lineTo(xpos, ypos)
-    else         context.moveTo(xpos, ypos)
-    context.stroke()
-})
-$('#pad').mousedown(function() { pendown = true  } )
-$('#pad')  .mouseup(function() { pendown = false } )
+    if($('#password').val()==""){
+        $('#passwordSpan').html("Require");
+    }
+
+    if($('#username').val()!="" && $('#password').val()!=""){
+        $data = {
+            username: $('#username').val(),
+            password: $('#password').val(),
+        }
+        console.log("username" + $('#username').val());
+        console.log("password" + $('#password').val());
+        $.ajax({
+            url: 'http://localhost/project1/project1/forjquery/control/reqdata.php',
+            type: 'POST',
+            data: $data,
+            success: function(res){
+                $('#responses').html(res);
+            },
+            error: function(err){
+                $('#responses').html("fail");
+            }
+        })
+    }
+    event.preventDefault();
+});
+
+
+
+
+
+
