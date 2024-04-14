@@ -11,34 +11,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Here you can perform any necessary validation, authentication, or processing
         $username = sanitizeString($_POST['username']);
         $password = sanitizeString($_POST['password']);
-        // For this example, let's assume that the username and password are valid
-        // For this example, let's simply create a response array
-        $response = array(
-            "status" => "success",
-            "message" => "Login successful"
-        );
-
-        // Send back the response as JSON
-        echo json_encode($response);
-    } else {
-        // If username or password is not set, return an error response
-        $response = array(
-            "status" => "error",
-            "message" => "invalid username or password"
-        );
-
-        // Send back the error response as JSON
-        echo json_encode($response);
+        include ('../model/dbReq.php');
+        $result = dbReq::checkUsernameAndPass($username, $password);
+        /*if($result === 'success'){
+            // create array for response
+            $response = array(
+                "status" => "success",
+                "message" => "valid username"
+            );
+            echo json_encode($response);
+        }*/
+        if($result == 'success'){
+            $response = array(
+                "status" => "success",
+                "message" => "valid username"
+            );
+            echo json_encode($response);
+        }else{
+            $response = array(
+                "status" => "fail",
+                "message" => "invalid username"
+            );
+            echo json_encode($response);
+        }
     }
-} else {
-    // If the request method is not POST, return an error response
-    $response = array(
-        "status" => "error",
-        "message" => "Invalid request method"
-    );
-
-    // Send back the error response as JSON
-    echo json_encode($response);
 }
 function sanitizeString($inputSanitizeData){
     $inputSanitizeData = trim($inputSanitizeData);

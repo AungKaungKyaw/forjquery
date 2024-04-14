@@ -29,22 +29,30 @@ $('#loginSubmit').click((event)=>{
         $('#passwordSpan').html("Require");
     }
 
-    if($('#username').val()!="" && $('#password').val()!=""){
+    if ($('#username').val() != "" && $('#password').val() != "") {
         $data = {
             username: $('#username').val(),
             password: $('#password').val(),
         }
-        console.log("username" + $('#username').val());
-        console.log("password" + $('#password').val());
+        console.log("username : " + $data.username);
+        console.log("password : " + $('#password').val());
         $.ajax({
             url: 'http://localhost/project1/project1/forjquery/control/reqdata.php',
             type: 'POST',
             data: $data,
-            success: function(res){
-                $('#responses').html(res);
+            success: function (res) {
+                $('#responses').html();
+                console.log("successasdf");
+                let res1 = JSON.parse(res);
+                if (res1.status == 'success') {
+                    let username = $data.username;
+                    window.location.href = "http://localhost/project1/project1/forjquery/StaffDashboard.php?username=" + encodeURIComponent(username);
+                }
             },
-            error: function(err){
+            error: function (err) {
                 $('#responses').html("fail");
+                console.log("fail");
+                console.log(res);
             }
         })
     }

@@ -1,7 +1,7 @@
 <?php
 class Database{
     private static $localhost ='localhost';
-    private static $dbname = 'shop';
+    private static $dbname = 'shopping';
     private static $port = 3306;
     private static $username = 'root';
     private static $password ='';
