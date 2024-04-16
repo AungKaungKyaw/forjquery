@@ -45,8 +45,8 @@ $('#loginSubmit').click((event)=>{
                 console.log("successasdf");
                 let res1 = JSON.parse(res);
                 if (res1.status == 'success') {
-                    let username = $data.username;
-                    window.location.href = "http://localhost/project1/project1/forjquery/StaffDashboard.php?username=" + encodeURIComponent(username);
+                    localStorage.setItem('username',$data.username);
+                    window.location.href = "http://localhost/project1/project1/forjquery/StaffDashboard.html";
                 }
             },
             error: function (err) {
