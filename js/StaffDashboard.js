@@ -1,3 +1,91 @@
+
+
+
+document.querySelectorAll('.pointerCursor').forEach(function(element){
+    element.addEventListener('click',function(){
+        console.log("clicked");
+    })
+})
+// Select all td elements within elements having class 'tableRow'
+var cells = document.querySelectorAll('.tableRow td');
+// Output the attribute value of the fourth td element
+
+console.log("the attribute is :" + cells[3].getAttribute('id'));
+
+// Loop through each td element
+cells.forEach(function(rows){
+    // Check if the id attribute of the td element is 'thisone'
+    if(rows.getAttribute('class')=='pointerCursor'){
+        // Add a click event listener to the td element
+        rows.addEventListener('click',function(){
+            // Store the current text content of the td element
+            let oldValue = rows.innerText;
+            // Create a new input element
+            let input = document.createElement('input');
+            // Set the input type to text
+            input.type = 'text';
+            // Set the value of the input to the current text content
+            input.value = oldValue;
+
+            // Add keyup event listener to the input
+            input.addEventListener('keyup',function (event){
+                // Check if the Enter key was pressed (key code 13)
+                if(event.keyCode === 13){
+                    // Trigger the blur event to lose focus
+                    this.blur();
+                }
+            });
+
+            // Add blur event listener to the input
+            input.addEventListener('blur',function(){
+                // Get the new value from the input
+                let newValue = this.value;
+                // Replace the content of the parent td element with the new value
+                this.parentNode.innerText = newValue;
+                let priceCell = rows.parentNode.querySelector('.price');
+                let oldTotalprice = priceCell.innerText;
+                let totalPrice = (oldTotalprice/oldValue) * newValue;
+                priceCell.innerText = totalPrice;
+                console.log("row : " + totalPrice);
+            });
+
+            // Clear the content of the td element
+            this.innerText = '';
+            // Append the input element to the td element
+            this.appendChild(input);
+            // Focus on the input element
+            input.focus();
+            // Output the text content of the clicked td element to the result element
+            // document.getElementById('result').innerText = rows.innerText;
+        });
+
+        // Add a click event listener to the td element to delete the entire row
+    }
+    else if(rows.getAttribute('class')=='deleteTable') {
+        console.log("delet ehere");
+        rows.addEventListener('click',function(){
+            let rowToDelete = rows.closest('tr');
+            console.log("row to delete : "+rowToDelete);
+            console.log("rowToDelete.parentNode : "+rowToDelete.parentNode);
+            rowToDelete.closest("tbody").removeChild(rowToDelete);
+            /**
+             * the under is alternative ↓
+             * rowToDelete.parentNode.removeChild(rowToDelete);
+             * */
+            console.log("something");
+        })
+    }
+});
+
+
+
+
+
+
+
+
+
+
 const input1 = document.getElementById('inputItemCode');
 const input2 = document.getElementById('itemQty');
 /*input1.addEventListener('submit',function (event){
@@ -12,13 +100,36 @@ const input2 = document.getElementById('itemQty');
 var count = 1;
 input1.addEventListener('keyup', function(e){
     if(e.keyCode ===13){
+        console.log("inside itemcod");
         let itemCode = input1.value;
+
         // let itemCode = input1.value();
         reqData(itemCode, function (res){
             let res1 = JSON.parse(res);
             console.log(res1);
-            displayData(res1);
+            displayData(res1,1);
         })
+        clearValue();
+    }
+})
+input2.addEventListener('keyup', function(e){
+    if(e.keyCode ===13){
+        // console.log("inside qty");
+        let itemCode = input1.value;
+        let qty = input2.value;
+        console.log("input2 vale : " + qty);
+        if(itemCode === '' || itemCode == null){
+            document.getElementById('itemCodeSpan').innerText = "enter item code";
+            return;
+        }
+        if(itemCode != '' && qty != ''){
+            reqData(itemCode, function (res){
+                let res1 = JSON.parse(res);
+                console.log(res1);
+                displayData(res1,qty);
+            })
+        }
+        clearValue();
     }
 })
 
@@ -41,29 +152,120 @@ function reqData(itemCode, callback){
     let jsonData = JSON.stringify({
         itemCode: itemCode
     })
-    console.log(jsonData);
+    // console.log(jsonData);
     xhr.send(jsonData);
 }
 function displayData(data){
-    let tr = document.createElement('tr');
+        let listItems = document.querySelectorAll('.tableRow');
+        console.log("argument1///////////////////////////");
+        console.log(arguments[1]);
+        // listItems row တွေရှိမရှိအရင်စစ်တယ် ဘာလို့လဲဆိုတော့ same item ကိုနှစ်ခါချမိမှာစိုးလို့
+        // listItems ထဲမှာ row တစ်ခုရှိနေရင် row ရဲ့ product code တူနေရင် နှစ်ခါမချမိအောင်
+        if(listItems.length === 0){
+            console.log("listItems is null");
+            let tr = document.createElement('tr');
+            tr.className = "tableRow";
+            let tdCount = document.createElement('td');
+            tdCount.innerText = count;
+            tr.appendChild(tdCount);
 
-    let tdCount = document.createElement('td');
-    tdCount.innerText = count;
-    tr.appendChild(tdCount);
+            let tdProductCode = document.createElement('td');
+            tdProductCode.innerText = data['ProductCode'];
+            tr.appendChild(tdProductCode);
 
-    let tdProductCode = document.createElement('td');
-    tdProductCode.innerText = data['ProductCode'];
-    tr.appendChild(tdProductCode);
+            let tdProductName = document.createElement('td');
+            tdProductName.innerText = data['ProductName'];
+            tr.appendChild(tdProductName);
 
-    let tdProductName = document.createElement('td');
-    tdProductName.innerText = data['ProductName'];
-    tr.appendChild(tdProductName);
+            let tdProductQty = document.createElement('td');
+            tdProductQty.id = 'itemQtyEdit' + count;
+            tdProductQty.className = 'pointerCursor';
+            tdProductQty.innerText = arguments[1];
+            tr.appendChild(tdProductQty);
+            console.log("tdProductQty");
+            console.log(tdProductQty);
 
-    let tdProductPrice = document.createElement('td');
-    tdProductPrice.innerText = data['ProductPrice'];
-    tr.appendChild(tdProductPrice);
+            let tdProductPrice = document.createElement('td');
+            tdProductPrice.className = 'price';
+            tdProductPrice.innerText = data['ProductPrice'] * arguments[1];
+            tr.appendChild(tdProductPrice);
 
-    count++;
+            //delete
+            let tdDelete = document.createElement('td');
+            tdDelete.className = 'deleteTable';
+            tdDelete.innerText = 'Delete';
+            tr.appendChild(tdDelete);
 
-    document.getElementById("tableBody").appendChild(tr);
+            count++;
+            document.getElementById("tableBody").appendChild(tr);
+        }else{
+            console.log(listItems[0]);
+            let secondCellValue = [];
+            let rows = document.querySelectorAll('.tableRow');
+            rows.forEach(function(row){
+                let cells = row.querySelectorAll('td');
+                secondCellValue.push(cells[1].innerText);
+            })
+            console.log(secondCellValue);
+
+            if(!secondCellValue.includes(data['ProductCode'])){
+                console.log("inside check point productCode : ");
+                let tr = document.createElement('tr');
+                tr.className = "tableRow";
+                let tdCount = document.createElement('td');
+                tdCount.innerText = count;
+                tr.appendChild(tdCount);
+
+                let tdProductCode = document.createElement('td');
+                tdProductCode.innerText = data['ProductCode'];
+                tr.appendChild(tdProductCode);
+
+                let tdProductName = document.createElement('td');
+                tdProductName.innerText = data['ProductName'];
+                tr.appendChild(tdProductName);
+
+                let tdProductQty = document.createElement('td');
+                tdProductQty.id = 'itemQtyEdit' + count;
+                tdProductQty.className = 'pointerCursor';
+                tdProductQty.innerText = arguments[1];
+                tr.appendChild(tdProductQty);
+                console.log("tdProductQty");
+                console.log(tdProductQty);
+
+                let tdProductPrice = document.createElement('td');
+                tdProductPrice.className = 'price';
+                tdProductPrice.innerText = data['ProductPrice'] * arguments[1];
+                tr.appendChild(tdProductPrice);
+
+                //delete
+                let tdDelete = document.createElement('td');
+                tdDelete.className = 'deleteTable';
+                tdDelete.innerText = 'Delete';
+                tr.appendChild(tdDelete);
+
+                count++;
+                document.getElementById("tableBody").appendChild(tr);
+            }
+            else{
+                console.log("do nothing");
+            }
+
+        }
+
 }
+var btnTest = document.getElementById('something');
+btnTest.addEventListener('click', function(){
+    let data = document.getElementById('itemQty');
+    let result = document.getElementById('result');
+    result.innerText = data.innerText;
+})
+function clearValue(){
+    input1.value = '';
+    input2.value = '';
+}
+
+/**
+ * for edit and delete
+ * */
+
+

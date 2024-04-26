@@ -8,6 +8,7 @@ header("Access-Control-Max-Age: 31536000");
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jsonData = file_get_contents('php://input');
     $data = json_decode($jsonData, true);
+    if(isset($data['status']))
     // Check if username and password are set
     if (isset($_POST["username"]) && isset($_POST["password"])) {
         // Here you can perform any necessary validation, authentication, or processing
